@@ -15,11 +15,11 @@ class MySqlModel {
 
 			this.connection = mysql.createPool({
 		        connectionLimit : 10,
-		        host     : config.db.mysql.host[env],
-		        user     : config.db.mysql.credentials[env].username,
-		        password : config.db.mysql.credentials[env].password,
-		        database : config.db.mysql.database[env],
-		        port     : config.db.mysql.port[env],
+		        host     : config.db.mysql[env].host,
+		        user     : config.db.mysql[env].username,
+		        password : config.db.mysql[env].password,
+		        database : config.db.mysql[env].database,
+		        port     : config.db.mysql[env].port,
 		        debug    :  false,
 		        supportBigNumbers: true,
 		        bigNumberStrings: true,
@@ -48,7 +48,7 @@ class MySqlModel {
 
 		if(this.connection !== null) {
 
-			this.connection.close();
+			this.connection.end();
 		}
 	}
 }
