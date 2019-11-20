@@ -1,4 +1,5 @@
-global.env = process.env.NODE_ENV === undefined ? "dev" : "prod";
+global.env =
+  process.env.NODE_ENV === undefined ? "development" : process.env.NODE_ENV;
 const PORT = 8080;
 
 const express = require("express");
@@ -71,6 +72,9 @@ class Server {
   }
 
   initRoutes() {
+    const authMiddleWare = require("./middlewares/auth");
+    app.use(authMiddleWare);
+
     const exampleRouter = require("./routes/example")(this.example_controller);
     //const exampleRouter = require('./routes/example')( this.example_controller );
 
