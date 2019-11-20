@@ -103,16 +103,12 @@ class Server {
 
 const server = new Server();
 
-[
-  `exit`,
-  `SIGINT`,
-  `SIGUSR1`,
-  `SIGUSR2`,
-  `uncaughtException`,
-  `SIGTERM`
-].forEach(eventType => {
+["SIGINT", "SIGTERM", "SIGQUIT"].forEach(eventType => {
   process.on(eventType, err => {
+    global.log.error(err);
     server.onClose();
-    process.exit(0);
+    //to avoid executing multiple times
+    server.onClose = () => {};
+    process.exit(-1);
   });
 });
