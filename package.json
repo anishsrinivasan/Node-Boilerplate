@@ -15,7 +15,6 @@
     "compression": "^1.7.4",
     "db-migrate-mysql": "^1.1.10",
     "express": "^4.17.1",
-    "i": "^0.3.6",
     "jsonwebtoken": "^8.5.1",
     "logger": "0.0.1",
     "mysql": "^2.17.1",
