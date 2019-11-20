@@ -14,7 +14,7 @@ class Server {
 
 	constructor() {
 
-		this.models = [];
+		this.drivers = [];
 		this.init();
 	}
 
@@ -22,7 +22,7 @@ class Server {
 
 		try {
 
-			this.initModels();
+			await this.initDrivers();
 
 			this.initControllers();
 	        this.initExpress();
@@ -55,16 +55,16 @@ class Server {
         });
     }
 
-    initModels() {
+    initDrivers() {
 
     	return new Promise(async (resolve, reject)=>{
 
     		try {
 
-				this.mysql = await require('./models/mysql')().connect();
+				this.mysql = await require('./drivers/mysql')().connect();
 				//this.mongo = require('./models/mongo')().connect();
 
-				this.models.push(this.mysql);
+				this.drivers.push(this.mysql);
                 //this.models.push(this.mongo);
 
                 resolve();
@@ -94,7 +94,7 @@ class Server {
     onClose() {
 
     	//Close all DB Connections
-    	this.models.map(m=>{
+    	this.drivers.map(m=>{
 
     		m.close();
     	});
