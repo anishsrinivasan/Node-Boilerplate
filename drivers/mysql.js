@@ -9,6 +9,9 @@ class MySqlModel {
 
   connect() {
     return new Promise((resolve, reject) => {
+	
+		console.log()
+
       this.connection = mysql.createPool({
         connectionLimit: 10,
         host: config.db.mysql[env].host,

@@ -31,6 +31,15 @@ class Server {
   }
 
   initExpress() {
+    if (global.env === "development") {
+      app.use(require("cors")());
+    }
+
+    app.use("*", (req, res, next) => {
+      console.log(req.method, req.baseUrl);
+      next();
+    });
+
     //Enable request compression
     app.use(compression());
     app.use(bodyParser.json()); // to support JSON-encoded bodies
