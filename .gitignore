@@ -1,5 +1,4 @@
 node_modules/
 dev.log
 config.json
-migrations/*/database.json
 .DS_Store
