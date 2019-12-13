@@ -1,5 +1,10 @@
 # Node-Boilerplate
 
+## File and Folder naming convention
+
+> folder - **snake_case**    
+> file - **kebab-case**
+
 ## External Libraries
 
 ### Database Migration
