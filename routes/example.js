@@ -41,7 +41,6 @@ class ExampleRoutes {
         if (err.name === "ValidationError") {
           res.json({ code: 422, msg: err.details[0].message });
         } else {
-          global.log.error(err);
           res.json({ code: 500, msg: "An error occurred !" });
         }
       }

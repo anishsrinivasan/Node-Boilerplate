@@ -8,9 +8,6 @@ const compression = require("compression");
 const bodyParser = require("body-parser");
 const HttpServer = require("http").createServer(app);
 
-global.log = require("logger").createLogger("dev.log");
-global.log.setLevel("error");
-
 class Server {
   constructor() {
     this.drivers = [];
@@ -26,7 +23,8 @@ class Server {
       this.initRoutes();
       this.initServer();
     } catch (err) {
-      global.log.error(err);
+      console.log(err);
+      process.exit(-1);
     }
   }
 
@@ -111,7 +109,6 @@ const server = new Server();
 
 ["SIGINT", "SIGTERM", "SIGQUIT"].forEach(eventType => {
   process.on(eventType, err => {
-    global.log.error(err);
     server.onClose();
     //to avoid executing multiple times
     server.onClose = () => {};

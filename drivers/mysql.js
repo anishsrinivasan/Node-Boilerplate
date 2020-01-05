@@ -2,6 +2,8 @@ const mysql = require("mysql");
 const config = require("../config.json");
 const env = global.env;
 
+const logger = require("../utils/logger");
+
 class MySqlModel {
   constructor() {
     this.connection = null;
@@ -9,9 +11,6 @@ class MySqlModel {
 
   connect() {
     return new Promise((resolve, reject) => {
-	
-		console.log()
-
       this.connection = mysql.createPool({
         connectionLimit: 10,
         host: config.db.mysql[env].host,
@@ -26,11 +25,29 @@ class MySqlModel {
 
       this.connection.getConnection((err, connection) => {
         if (err) {
+          logger.Log({
+            level: logger.LEVEL.FATAL,
+            component: "DRIVER",
+            code: "DRIVER.CONNECTION.ERROR",
+            description: err.toString(),
+            category: "",
+            ref: {}
+          });
+
           reject(err);
+          return;
         }
 
         if (connection) {
-          console.log("DB Connection Established !");
+          logger.Log({
+            level: logger.LEVEL.INFO,
+            component: "DRIVER",
+            code: "",
+            description: "DB Connection Established",
+            catego3ry: "",
+            ref: {}
+          });
+
           connection.release();
           resolve(this);
         }

@@ -1,4 +1,4 @@
-const jwt = require("../services/jwt");
+const logger = require("../utils/logger");
 
 class ExampleController {
   constructor(db) {
@@ -12,6 +12,14 @@ class ExampleController {
         [username, password],
         (err, docs) => {
           if (err) {
+            logger.Log({
+              level: logger.LEVEL.ERROR,
+              component: "CONTROLLER.EXAMPLE",
+              code: "CONTROLLER.QUERY.ERROR",
+              description: err.toString(),
+              category: "",
+              ref: {}
+            });
             reject(err);
             return;
           }
