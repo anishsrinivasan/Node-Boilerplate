@@ -1,6 +1,6 @@
 const logger = require("../utils/logger");
 
-class ExampleController {
+class ExampleRepository {
   constructor(db) {
     this.db = db;
   }
@@ -14,11 +14,11 @@ class ExampleController {
           if (err) {
             logger.Log({
               level: logger.LEVEL.ERROR,
-              component: "CONTROLLER.EXAMPLE",
-              code: "CONTROLLER.QUERY.ERROR",
+              component: "REPOSITORY.EXAMPLE",
+              code: "REPOSITORY.EXAMPLE.ERROR",
               description: err.toString(),
               category: "",
-              ref: {}
+              ref: {},
             });
             reject(err);
             return;
@@ -34,6 +34,6 @@ class ExampleController {
   }
 }
 
-module.exports = db => {
-  return new ExampleController(db);
+module.exports = (db) => {
+  return new ExampleRepository(db);
 };

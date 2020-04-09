@@ -1,12 +1,14 @@
 global.env =
   process.env.NODE_ENV === undefined ? "development" : process.env.NODE_ENV;
-const PORT = 8080;
+const PORT = process.env.PORT === undefined ? 8080 : process.env.PORT;
 
 const express = require("express");
 const app = express();
 const compression = require("compression");
 const bodyParser = require("body-parser");
 const HttpServer = require("http").createServer(app);
+
+const logger = require("./utils/logger");
 
 class Server {
   constructor() {
@@ -18,29 +20,29 @@ class Server {
     try {
       await this.initDrivers();
 
-      this.initControllers();
+      this.initRepositories();
+      this.initUsecases();
       this.initExpress();
       this.initRoutes();
       this.initServer();
     } catch (err) {
-      console.log(err);
-      process.exit(-1);
+      process.exit(err);
     }
   }
 
   initExpress() {
-    if (global.env === "development") {
-      app.use(require("cors")());
-    }
+    app.use(require("cors")());
 
     const colours = {
       GET: "\x1b[32m",
       POST: "\x1b[34m",
       DELETE: "\x1b[31m",
-      PUT: "\x1b[33m"
+      PUT: "\x1b[33m",
     };
     app.use("*", (req, _, next) => {
-      console.log(colours[req.method] + req.method, "\x1b[0m" + req.baseUrl);
+      if (global.env === "development") {
+        console.log(colours[req.method] + req.method, "\x1b[0m" + req.baseUrl);
+      }
       next();
     });
 
@@ -50,7 +52,7 @@ class Server {
     app.use(
       bodyParser.urlencoded({
         // to support URL-encoded bodies
-        extended: true
+        extended: true,
       })
     );
     app.use(express.static(__dirname + "/views", { maxAge: "30 days" }));
@@ -78,17 +80,19 @@ class Server {
     });
   }
 
-  initControllers() {
-    this.example_controller = require("./controllers/example")(
-      this.mysql.connection
-    );
+  initRepositories() {
+    this.exampleRepo = require("./repository/example")(this.mysql.connection);
+  }
+
+  initUsecases() {
+    this.exampleUsecase = require("./usecase/example")(this.exampleRepo);
   }
 
   initRoutes() {
     const authMiddleWare = require("./middlewares/auth");
     app.use(authMiddleWare);
 
-    const exampleRouter = require("./routes/example")(this.example_controller);
+    const exampleRouter = require("./routes/example")(this.exampleUsecase);
     //const exampleRouter = require('./routes/example')( this.example_controller );
 
     app.use("/example", exampleRouter.getRouter());
@@ -97,7 +101,7 @@ class Server {
 
   onClose() {
     //Close all DB Connections
-    this.drivers.map(m => {
+    this.drivers.map((m) => {
       m.close();
     });
 
@@ -107,11 +111,25 @@ class Server {
 
 const server = new Server();
 
-["SIGINT", "SIGTERM", "SIGQUIT"].forEach(eventType => {
-  process.on(eventType, err => {
+[
+  "SIGINT",
+  "SIGTERM",
+  "SIGQUIT",
+  "exit",
+  "uncaughtException",
+  "SIGUSR1",
+  "SIGUSR2",
+].forEach((eventType) => {
+  process.on(eventType, (err = "") => {
+    process.removeAllListeners();
+    logger.Log({
+      level: logger.LEVEL.ERROR,
+      component: "SERVER",
+      code: "SERVER.EXIT",
+      description: err.toString(),
+      category: "",
+      ref: {},
+    });
     server.onClose();
-    //to avoid executing multiple times
-    server.onClose = () => {};
-    process.exit(-1);
   });
 });
