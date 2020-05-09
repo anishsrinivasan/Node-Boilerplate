@@ -2,8 +2,8 @@ const router = require("express").Router();
 const Joi = require("@hapi/joi");
 
 class ExampleRoutes {
-  constructor(controller) {
-    this.controller = controller;
+  constructor(usecase) {
+    this.usecase = usecase;
 
     this.init();
   }
@@ -13,7 +13,7 @@ class ExampleRoutes {
       try {
         const schema = {
           username: Joi.string().required(),
-          password: Joi.string().required()
+          password: Joi.string().required(),
         };
 
         const username = req.body.username;
@@ -22,7 +22,7 @@ class ExampleRoutes {
         const isValid = Joi.validate(
           {
             username: username,
-            password: password
+            password: password,
           },
           schema
         );
@@ -31,7 +31,7 @@ class ExampleRoutes {
           throw isValid.error;
         }
 
-        const getUserDetails = await this.controller.login(
+        const getUserDetails = await this.usecase.login(
           req.body.username,
           req.body.password
         );
@@ -39,7 +39,7 @@ class ExampleRoutes {
         res.json(getUserDetails);
       } catch (err) {
         if (err.name === "ValidationError") {
-          res.json({ code: 422, msg: err.details[0].message });
+          res.json({ code: 422, msg: err.toString() });
         } else {
           res.json({ code: 500, msg: "An error occurred !" });
         }
@@ -59,6 +59,6 @@ class ExampleRoutes {
   }
 }
 
-module.exports = controller => {
-  return new ExampleRoutes(controller);
+module.exports = (usecase) => {
+  return new ExampleRoutes(usecase);
 };
