@@ -122,11 +122,18 @@ const server = new Server();
 ].forEach((eventType) => {
   process.on(eventType, (err = "") => {
     process.removeAllListeners();
+    
+    let error = err.toString();
+
+    if (err.stack) {
+      error = err.stack;
+    }
+    
     logger.Log({
       level: logger.LEVEL.ERROR,
       component: "SERVER",
       code: "SERVER.EXIT",
-      description: err.toString(),
+      description: error,
       category: "",
       ref: {},
     });
