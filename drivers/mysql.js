@@ -1,5 +1,5 @@
 const mysql = require("mysql");
-const config = require("../config.json");
+const config = require("../config/config.json");
 const env = global.env;
 
 const logger = require("../utils/logger");
@@ -20,7 +20,7 @@ class MySqlModel {
         port: config.db.mysql[env].port,
         debug: false,
         supportBigNumbers: true,
-        bigNumberStrings: true
+        bigNumberStrings: true,
       });
 
       this.connection.getConnection((err, connection) => {
@@ -31,7 +31,7 @@ class MySqlModel {
             code: "DRIVER.CONNECTION.ERROR",
             description: err.toString(),
             category: "",
-            ref: {}
+            ref: {},
           });
 
           reject(err);
@@ -44,8 +44,8 @@ class MySqlModel {
             component: "DRIVER",
             code: "",
             description: "DB Connection Established",
-            catego3ry: "",
-            ref: {}
+            category: "",
+            ref: {},
           });
 
           connection.release();
