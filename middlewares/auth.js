@@ -1,8 +1,8 @@
 const jwt = require("../services/jwt");
 
 const unProtectedRoutes = {
-  "/example/login": true,
-  "/example": true
+  "/api/example/login": true,
+  "/api/example": true,
 };
 
 async function auth(req, res, next) {

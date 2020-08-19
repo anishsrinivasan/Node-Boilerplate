@@ -93,7 +93,7 @@ class Server {
     app.use(authMiddleWare);
 
     const exampleRouter = require("./routes/example")(this.exampleUsecase);
-    app.use("/example", exampleRouter.getRouter());
+    app.use("/api/example", exampleRouter.getRouter());
   }
 
   onClose() {

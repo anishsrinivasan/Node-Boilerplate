@@ -1,5 +1,4 @@
 const Joi = require("@hapi/joi");
-const Joi = require("@hapi/joi");
 
 const loginUser = {
   body: Joi.object().keys({
