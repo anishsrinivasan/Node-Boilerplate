@@ -20,7 +20,11 @@ class ExampleRoutes {
           );
           res.json(getUserDetails);
         } catch (err) {
-          res.json({ code: 500, msg: "An error occurred !" });
+          res.json({
+            code: 500,
+            msg: "An error occurred !",
+            err: err.toString(),
+          });
         }
         res.end();
       }

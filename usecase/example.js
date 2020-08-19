@@ -5,12 +5,13 @@ class ExampleUsecase {
     this.exampleRepo = exampleRepo;
   }
 
-  login(username, password) {
-    return new Promise(async (resolve, resolve) => {
+  async login(username, password) {
+    return new Promise(async (resolve, reject) => {
       try {
-        const resp = await this.exampleRepo.login(username, password);
-        resolve(resp);
+        const response = await this.exampleRepo.login(username, password);
+        resolve(response);
       } catch (err) {
+        console.log(err);
         reject(err);
       }
     });
