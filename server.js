@@ -93,10 +93,7 @@ class Server {
     app.use(authMiddleWare);
 
     const exampleRouter = require("./routes/example")(this.exampleUsecase);
-    //const exampleRouter = require('./routes/example')( this.example_controller );
-
     app.use("/example", exampleRouter.getRouter());
-    //app.use('/example', displayRouter.getRouter());
   }
 
   onClose() {
@@ -122,13 +119,13 @@ const server = new Server();
 ].forEach((eventType) => {
   process.on(eventType, (err = "") => {
     process.removeAllListeners();
-    
+
     let error = err.toString();
 
     if (err.stack) {
       error = err.stack;
     }
-    
+
     logger.Log({
       level: logger.LEVEL.ERROR,
       component: "SERVER",
