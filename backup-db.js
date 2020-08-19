@@ -4,7 +4,7 @@ const env = global.env;
 
 const CronJob = require("cron").CronJob;
 const mysqldump = require("mysqldump");
-const config = require("./config.json");
+const config = require("./config/config.json");
 const moment = require("moment");
 const init = process.env.INIT === "true" ? true : false;
 
